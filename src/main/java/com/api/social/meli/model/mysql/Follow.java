@@ -1,4 +1,4 @@
-package com.api.social.meli.model;
+package com.api.social.meli.model.mysql;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,8 +25,8 @@ public class Follow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "follower_id")
-    private Long followerId;
+    @Column(name = "id")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)

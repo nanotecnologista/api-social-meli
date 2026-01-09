@@ -1,4 +1,4 @@
-package com.api.social.meli.model;
+package com.api.social.meli.model.mysql;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "roles", indexes = {
         @Index(name = "idx_roles_name", columnList = "name"),
-        @Index(name = "idx_roles_id", columnList = "role_id")
+        @Index(name = "idx_roles_id", columnList = "id")
 })
 @Data
 @Builder
@@ -24,8 +24,8 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
-    private Long roleId;
+    @Column(name = "id")
+    private Long id;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -38,7 +38,7 @@ public class Role {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "roleId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserRole> userRoles = new HashSet<>();
 
     @PrePersist

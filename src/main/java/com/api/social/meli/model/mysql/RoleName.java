@@ -1,4 +1,4 @@
-package com.api.social.meli.model;
+package com.api.social.meli.model.mysql;
 
 public enum RoleName {
     CUSTOMER,

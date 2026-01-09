@@ -1,4 +1,4 @@
-package com.api.social.meli.model;
+package com.api.social.meli.model.mysql;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +13,10 @@ import java.time.LocalDateTime;
         indexes = {
                 @Index(name = "idx_product_name", columnList = "name"),
                 @Index(name = "idx_product_category", columnList = "category_id"),
-                @Index(name = "idx_product_seller", columnList = "seller_id")
+                @Index(name = "idx_product_seller", columnList = "seller_id"),
+                @Index(name = "idx_product_active", columnList = "active"),
+                @Index(name = "idx_product_id", columnList = "id")
+
         }
 )
 @Data
@@ -24,8 +27,8 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
-    private Long productId;
+    @Column(name = "id")
+    private Long id;
 
     @NotBlank
     @Column(nullable = false, length = 40)

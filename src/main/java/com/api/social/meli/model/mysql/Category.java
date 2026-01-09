@@ -1,4 +1,4 @@
-package com.api.social.meli.model;
+package com.api.social.meli.model.mysql;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
         name = "categories",
         indexes = {
                 @Index(name = "idx_categories_name", columnList = "name"),
-                @Index(name = "idx_categories_id", columnList = "category_id")
+                @Index(name = "idx_categories_id", columnList = "id")
         }
 )
 @Data

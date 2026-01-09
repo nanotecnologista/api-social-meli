@@ -1,4 +1,4 @@
-package com.api.social.meli.model;
+package com.api.social.meli.model.mysql;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="users", indexes = {
-        @Index(name= "idx_user_id", columnList = "user_id"),
+        @Index(name= "idx_user_id", columnList = "id"),
         @Index(name= "idx_user_nickname", columnList = "nickname"),
         @Index(name= "idx_user_email", columnList = "email")
 })
@@ -27,8 +27,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "id")
+    private Long id;
 
     @NotBlank
     @Column(nullable = false)
