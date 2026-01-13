@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 @Profile("dev")
@@ -22,10 +21,6 @@ public class MongoSeedRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if (postRepository.count() > 0) {
-            return;
-        }
-
         Post post1 = Post.builder()
                 .userId(1L) // seller id (do MySQL seed)
                 .date(LocalDate.now().minusDays(1))
@@ -61,6 +56,18 @@ public class MongoSeedRunner implements ApplicationRunner {
                 .discount(new BigDecimal("0.25"))
                 .build();
 
-        postRepository.saveAll(List.of(post1, post2));
+        seedIfMissing(post1);
+        seedIfMissing(post2);
+    }
+
+    private void seedIfMissing(Post post) {
+        Long userId = post.getUserId();
+        Long productId = post.getProduct().getProductId();
+
+        if (postRepository.existsByUserIdAndProductProductId(userId, productId)) {
+            return;
+        }
+
+        postRepository.save(post);
     }
 }
