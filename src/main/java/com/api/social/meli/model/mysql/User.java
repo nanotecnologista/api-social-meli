@@ -61,7 +61,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserRole> userRoles = new HashSet<>();
+    private Set<com.api.social.meli.model.mysql.UserRole> userRoles = new HashSet<>();
 
     @PrePersist
     void prePersist() {
