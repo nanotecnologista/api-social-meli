@@ -26,6 +26,9 @@ public class UserService {
             throw new IllegalArgumentException("you can only activate seller for yourself");
         }
 
+        if (userRoleRepository.findRolesByUserId(userIdToActivate).contains(RoleName.SELLER)) {
+            throw new IllegalArgumentException("user is already a seller");
+        }
 
         User user = userRepository.findById(userIdToActivate)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
@@ -35,9 +38,7 @@ public class UserService {
 
 
         // adiciona SELLER
-        if (!userRoleRepository.existsByUserAndRole(user, sellerRole)) {
-            userRoleRepository.save(UserRole.builder().user(user).role(sellerRole).build());
-        }
+        userRoleRepository.save(UserRole.builder().user(user).role(sellerRole).build());
 
         return ActivateSellerResponse.builder()
                 .userId(user.getId())

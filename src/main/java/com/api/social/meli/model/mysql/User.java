@@ -82,10 +82,30 @@ public class User {
     }
 
     public void addFollower() {
+        if (this.followersCount == null) {
+            this.followersCount = 0;
+        }
         this.followersCount++;
     }
 
     public void removeFollower() {
+        if (this.followersCount == null) {
+            this.followersCount = 0;
+        }
         this.followersCount--;
+    }
+
+    public void addFollowing() {
+        if (this.followingCount == null) {
+            this.followingCount = 0;
+        }
+        this.followingCount++;
+    }
+
+    public void removeFollowing() {
+        if (this.followingCount == null) {
+            this.followingCount = 0;
+        }
+        this.followingCount--;
     }
 }
