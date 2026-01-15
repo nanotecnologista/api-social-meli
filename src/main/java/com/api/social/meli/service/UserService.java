@@ -26,19 +26,13 @@ public class UserService {
             throw new IllegalArgumentException("you can only activate seller for yourself");
         }
 
+
         User user = userRepository.findById(userIdToActivate)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
-
-        Role customerRole = roleRepository.findByName(RoleName.CUSTOMER)
-                .orElseThrow(() -> new IllegalStateException("Role CUSTOMER not found in database"));
 
         Role sellerRole = roleRepository.findByName(RoleName.SELLER)
                 .orElseThrow(() -> new IllegalStateException("Role SELLER not found in database"));
 
-        // garante CUSTOMER
-        if (!userRoleRepository.existsByUserAndRole(user, customerRole)) {
-            userRoleRepository.save(UserRole.builder().user(user).role(customerRole).build());
-        }
 
         // adiciona SELLER
         if (!userRoleRepository.existsByUserAndRole(user, sellerRole)) {
