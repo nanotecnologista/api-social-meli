@@ -92,6 +92,43 @@ public class PostController {
         postService.publishPromo(authUserId, roles, req);
     }
 
+    @GetMapping("/posts/count")
+    @Operation(
+            summary = "Contar publicações do vendedor",
+            description = """
+                    Retorna a quantidade total de publicações de um vendedor.
+                    
+                    **Exemplo de Response (200 OK):**
+                    ```json
+                    {
+                      "user_id": 1,
+                      "user_name": "joaosilva",
+                      "posts_count": 25
+                    }
+                    ```
+                    
+                    **Observações:**
+                    - Conta todas as publicações (normais e promocionais)
+                    - Endpoint público (não requer autenticação)
+                    """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Contagem retornada com sucesso",
+                    content = @Content(schema = @Schema(implementation = PostCountResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuário não encontrado"
+            )
+    })
+    public PostCountResponse postCount(
+            @Parameter(description = "ID do usuário vendedor", required = true)
+            @RequestParam("user_id") Long userId) {
+        return postService.getPostCount(userId);
+    }
+
     @GetMapping("/promo-pub/count")
     @Operation(
             summary = "Contar produtos promocionais",

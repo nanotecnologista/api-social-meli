@@ -103,6 +103,14 @@ public class AuthUserInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (path.equals("/products/posts/count")) {
+            return true;
+        }
+
+        if (path.equals("/users/sellers") || path.matches("/users/sellers/\\d+")) {
+            return true;
+        }
+
         return false;
     }
 }

@@ -30,7 +30,26 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Criar nova categoria",
-            description = "Cria uma nova categoria de produtos no sistema"
+            description = """  
+                    Cria uma nova categoria de produtos no sistema.
+                    
+                    **Exemplo de Request:**
+                    ```json
+                    {
+                      "name": "Eletrônicos",
+                      "description": "Produtos eletrônicos e tecnologia"
+                    }
+                    ```
+                    
+                    **Exemplo de Response (201 Created):**
+                    ```json
+                    {
+                      "id": 1,
+                      "name": "Eletrônicos",
+                      "description": "Produtos eletrônicos e tecnologia"
+                    }
+                    ```
+                    """
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -50,7 +69,34 @@ public class CategoryController {
     @GetMapping
     @Operation(
             summary = "Listar todas as categorias",
-            description = "Retorna a lista completa de categorias disponíveis"
+            description = """  
+                    Retorna a lista completa de categorias disponíveis.
+                    
+                    **Exemplo de Response (200 OK):**
+                    ```json
+                    [
+                      {
+                        "id": 1,
+                        "name": "Eletrônicos",
+                        "description": "Produtos eletrônicos e tecnologia"
+                      },
+                      {
+                        "id": 2,
+                        "name": "Móveis",
+                        "description": "Móveis e decoração"
+                      },
+                      {
+                        "id": 3,
+                        "name": "Roupas",
+                        "description": "Vestuário e acessórios"
+                      }
+                    ]
+                    ```
+                    
+                    **Dica Frontend:**
+                    - Cache esta lista para evitar requisições desnecessárias
+                    - Use para popular dropdowns/selects de categorias
+                    """
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -66,7 +112,18 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     @Operation(
             summary = "Buscar categoria por ID",
-            description = "Retorna os detalhes de uma categoria específica"
+            description = """  
+                    Retorna os detalhes de uma categoria específica.
+                    
+                    **Exemplo de Response (200 OK):**
+                    ```json
+                    {
+                      "id": 1,
+                      "name": "Eletrônicos",
+                      "description": "Produtos eletrônicos e tecnologia"
+                    }
+                    ```
+                    """
     )
     @ApiResponses(value = {
             @ApiResponse(
