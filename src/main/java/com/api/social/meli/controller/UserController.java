@@ -1,6 +1,7 @@
 package com.api.social.meli.controller;
 
 import com.api.social.meli.config.AuthUserInterceptor;
+import com.api.social.meli.dto.common.PaginationParams;
 import com.api.social.meli.dto.user.*;
 import com.api.social.meli.service.FollowService;
 import com.api.social.meli.service.UserService;
@@ -18,7 +19,7 @@ public class UserController {
     private final FollowService followService;
 
     @PostMapping("/{id}/activate-seller")
-    public ActivateSellerResponse activateSeller(@PathVariable("id") Long id, HttpServletRequest request) {
+    public ActivateSellerResponse activateSeller(@PathVariable() Long id, HttpServletRequest request) {
         Long authUserId = (Long) request.getAttribute(AuthUserInterceptor.REQ_ATTR_AUTH_USER_ID);
         return userService.activateSeller(authUserId, id);
     }
@@ -26,8 +27,8 @@ public class UserController {
     @PostMapping("/{userId}/follow/{userIdToFollow}")
     @ResponseStatus(HttpStatus.OK)
     public void followUser(
-            @PathVariable("userId") Long userId,
-            @PathVariable("userIdToFollow") Long userIdToFollow,
+            @PathVariable() Long userId,
+            @PathVariable() Long userIdToFollow,
             HttpServletRequest request) {
         Long authUserId = (Long) request.getAttribute(AuthUserInterceptor.REQ_ATTR_AUTH_USER_ID);
         if (!authUserId.equals(userId)) {
@@ -39,8 +40,8 @@ public class UserController {
     @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
     @ResponseStatus(HttpStatus.OK)
     public void unfollowUser(
-            @PathVariable("userId") Long userId,
-            @PathVariable("userIdToUnfollow") Long userIdToUnfollow,
+            @PathVariable() Long userId,
+            @PathVariable() Long userIdToUnfollow,
             HttpServletRequest request) {
         Long authUserId = (Long) request.getAttribute(AuthUserInterceptor.REQ_ATTR_AUTH_USER_ID);
         if (!authUserId.equals(userId)) {
@@ -50,21 +51,21 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/followers/count")
-    public FollowerCountResponse getFollowersCount(@PathVariable("userId") Long userId) {
+    public FollowerCountResponse getFollowersCount(@PathVariable() Long userId) {
         return followService.getFollowersCount(userId);
     }
 
     @GetMapping("/{userId}/followers/list")
     public FollowerListResponse getFollowersList(
-            @PathVariable("userId") Long userId,
-            @RequestParam(value = "order", required = false) String order) {
-        return followService.getFollowersList(userId, order);
+            @PathVariable() Long userId,
+            @ModelAttribute PaginationParams pagination) {
+        return followService.getFollowersList(userId, pagination);
     }
 
     @GetMapping("/{userId}/followed/list")
     public FollowedListResponse getFollowedList(
-            @PathVariable("userId") Long userId,
-            @RequestParam(value = "order", required = false) String order) {
-        return followService.getFollowedList(userId, order);
+            @PathVariable() Long userId,
+            @ModelAttribute PaginationParams pagination) {
+        return followService.getFollowedList(userId, pagination);
     }
 }

@@ -1,5 +1,7 @@
 package com.api.social.meli.config;
 
+import com.api.social.meli.exception.ForbiddenException;
+import com.api.social.meli.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -44,5 +46,25 @@ public class ApiExceptionHandler {
         body.put("message", msg != null ? msg : "Invalid request");
 
         return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(ForbiddenException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", Instant.now().toString());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("message", ex.getMessage() != null ? ex.getMessage() : "Forbidden");
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(NotFoundException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", Instant.now().toString());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("message", ex.getMessage() != null ? ex.getMessage() : "Not found");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 }

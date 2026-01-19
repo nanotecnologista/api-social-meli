@@ -1,13 +1,13 @@
 package com.api.social.meli.config;
 
 import com.api.social.meli.model.mysql.RoleName;
-import com.api.social.meli.repository.mysql.RoleRepository;
 import com.api.social.meli.repository.mysql.UserRepository;
 import com.api.social.meli.repository.mysql.UserRoleRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -25,7 +25,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
     private final UserRoleRepository userRoleRepository;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         String uri = request.getRequestURI();
         String ctx = request.getContextPath();
 
@@ -37,6 +37,11 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         if (path != null && (path.equals("/auth") || path.startsWith("/auth/"))) {
             return true;
         }
+
+        if (isPublicRoute(request.getMethod(), path)) {
+            return true;
+        }
+
         String userIdHeader = request.getHeader(HEADER_USER_ID);
 
         if (userIdHeader == null || userIdHeader.isBlank()) {
@@ -77,5 +82,21 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         request.setAttribute(REQ_ATTR_AUTH_ROLES, roles);
 
         return true;
+    }
+
+    private boolean isPublicRoute(String method, String path) {
+        if (!"GET".equalsIgnoreCase(method) || path == null) {
+            return false;
+        }
+
+        if (path.matches("/products/\\d+")) {
+            return true;
+        }
+
+        if (path.equals("/categories") || path.startsWith("/categories/")) {
+            return true;
+        }
+
+        return false;
     }
 }

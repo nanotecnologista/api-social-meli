@@ -1,4 +1,4 @@
-package com.api.social.meli.dto.user;
+package com.api.social.meli.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,17 +12,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FollowedListResponse {
-    @JsonProperty("userId")
+public class PromoListResponse {
+
+    @JsonProperty("user_id")
     private Long userId;
 
-    @JsonProperty("userName")
+    @JsonProperty("user_name")
     private String userName;
 
-    private long total;
-    private int page;
-    private int size;
-
-    @JsonProperty("followed")
-    private List<UserBasicDto> followed;
+    private List<PostDto> posts;
 }
