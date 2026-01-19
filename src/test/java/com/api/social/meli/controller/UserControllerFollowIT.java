@@ -11,10 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,12 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
-@EnableAutoConfiguration(exclude = {
-        MongoAutoConfiguration.class,
-        MongoDataAutoConfiguration.class,
-        MongoRepositoriesAutoConfiguration.class
-})
+@ActiveProfiles("test-mongo")
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 class UserControllerFollowIT {
 

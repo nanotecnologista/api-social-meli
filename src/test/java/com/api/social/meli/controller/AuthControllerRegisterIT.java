@@ -3,6 +3,7 @@ package com.api.social.meli.controller;
 import com.api.social.meli.model.mysql.Role;
 import com.api.social.meli.model.mysql.RoleName;
 import com.api.social.meli.model.mysql.User;
+import com.api.social.meli.repository.mysql.FollowRepository;
 import com.api.social.meli.repository.mysql.RoleRepository;
 import com.api.social.meli.repository.mysql.UserRepository;
 import com.api.social.meli.repository.mysql.UserRoleRepository;
@@ -10,10 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -27,12 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
-@EnableAutoConfiguration(exclude = {
-        MongoAutoConfiguration.class,
-        MongoDataAutoConfiguration.class,
-        MongoRepositoriesAutoConfiguration.class
-})
+@ActiveProfiles("test-mongo")
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 class AuthControllerRegisterIT {
 
@@ -51,8 +43,12 @@ class AuthControllerRegisterIT {
     @Autowired
     private UserRoleRepository userRoleRepository;
 
+    @Autowired
+    private FollowRepository followRepository;
+
     @BeforeEach
     void setUp() {
+        followRepository.deleteAll();
         userRoleRepository.deleteAll();
         userRepository.deleteAll();
         roleRepository.deleteAll();
