@@ -38,6 +38,12 @@ public class AuthUserInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (path != null && (path.startsWith("/v3/api-docs") || 
+                             path.startsWith("/swagger-ui") || 
+                             path.equals("/swagger-ui.html"))) {
+            return true;
+        }
+
         if (isPublicRoute(request.getMethod(), path)) {
             return true;
         }
