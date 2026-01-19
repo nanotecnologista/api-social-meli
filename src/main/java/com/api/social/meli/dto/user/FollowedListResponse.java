@@ -13,11 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FollowedListResponse {
-    @JsonProperty("user_id")
+    @JsonProperty("userId")
     private Long userId;
 
-    @JsonProperty("user_name")
+    @JsonProperty("userName")
     private String userName;
+
+    private long total;
+    private int page;
+    private int size;
 
     @JsonProperty("followed")
     private List<UserBasicDto> followed;

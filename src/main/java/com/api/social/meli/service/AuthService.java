@@ -26,6 +26,8 @@ public class AuthService {
     private final UserRoleRepository userRoleRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    
+    private static final int MAX_PASSWORD_LENGTH = 72;
 
     public RegisterResponse register(RegisterRequest req) {
         if (userRepository.existsByEmail(req.getEmail())) {
@@ -34,6 +36,8 @@ public class AuthService {
         if (userRepository.existsByNickname(req.getNickname())) {
             throw new IllegalArgumentException("nickname already exists");
         }
+        
+        validatePassword(req.getPassword());
 
         User user = User.builder()
                 .name(req.getName())
@@ -64,6 +68,8 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest req) {
+        validatePassword(req.getPassword());
+        
         // login pode ser email ou nickname
         User user = userRepository.findByEmailOrNickname(req.getLogin(), req.getLogin())
                 .orElseThrow(() -> new IllegalArgumentException("invalid credentials"));
@@ -75,5 +81,14 @@ public class AuthService {
         return LoginResponse.builder()
                 .userId(user.getId())
                 .build();
+    }
+    
+    private void validatePassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+        if (password.length() > MAX_PASSWORD_LENGTH) {
+            throw new IllegalArgumentException("Password too long (max " + MAX_PASSWORD_LENGTH + " characters)");
+        }
     }
 }

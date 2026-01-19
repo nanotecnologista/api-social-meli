@@ -19,6 +19,10 @@ public class FollowerListResponse {
     @JsonProperty("userName")
     private String userName;
 
+    private long total;
+    private int page;
+    private int size;
+
     @JsonProperty("followers")
     private List<UserBasicDto> followers;
 }

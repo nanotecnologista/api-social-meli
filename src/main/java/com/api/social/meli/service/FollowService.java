@@ -1,5 +1,6 @@
 package com.api.social.meli.service;
 
+import com.api.social.meli.dto.common.PaginationParams;
 import com.api.social.meli.dto.user.*;
 import com.api.social.meli.model.mysql.Follow;
 import com.api.social.meli.model.mysql.RoleName;
@@ -7,13 +8,16 @@ import com.api.social.meli.model.mysql.User;
 import com.api.social.meli.repository.mysql.FollowRepository;
 import com.api.social.meli.repository.mysql.UserRepository;
 import com.api.social.meli.repository.mysql.UserRoleRepository;
+import com.api.social.meli.util.PaginationUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -96,63 +100,87 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public FollowerListResponse getFollowersList(Long userId, String order) {
+    public FollowerListResponse getFollowersList(Long userId, PaginationParams pagination) {
+        return getFollowersList(
+                userId,
+                pagination != null ? pagination.getOrder() : null,
+                pagination != null ? pagination.getPage() : null,
+                pagination != null ? pagination.getSize() : null,
+                pagination != null ? pagination.getOffset() : null,
+                pagination != null ? pagination.getLimit() : null
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public FollowedListResponse getFollowedList(Long userId, PaginationParams pagination) {
+        return getFollowedList(
+                userId,
+                pagination != null ? pagination.getOrder() : null,
+                pagination != null ? pagination.getPage() : null,
+                pagination != null ? pagination.getSize() : null,
+                pagination != null ? pagination.getOffset() : null,
+                pagination != null ? pagination.getLimit() : null
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public FollowerListResponse getFollowersList(Long userId, String order, Integer page, Integer size, Integer offset, Integer limit) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        List<Follow> follows = followRepository.findBySellerId(userId);
+        Pageable pageable = PaginationUtils.resolvePageable(page, size, offset, limit, resolveSort(order, "user.nickname"));
+        Page<Follow> followsPage = followRepository.findBySellerId(userId, pageable);
 
-        List<UserBasicDto> followers = follows.stream()
+        List<UserBasicDto> followers = followsPage.getContent().stream()
                 .map(follow -> UserBasicDto.builder()
                         .userId(follow.getUser().getId())
                         .userName(follow.getUser().getNickname())
                         .build())
-                .collect(Collectors.toList());
-
-        followers = applySorting(followers, order);
+                .toList();
 
         return FollowerListResponse.builder()
                 .userId(user.getId())
                 .userName(user.getNickname())
+                .total(followsPage.getTotalElements())
+                .page(followsPage.getNumber())
+                .size(followsPage.getSize())
                 .followers(followers)
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public FollowedListResponse getFollowedList(Long userId, String order) {
+    public FollowedListResponse getFollowedList(Long userId, String order, Integer page, Integer size, Integer offset, Integer limit) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        List<Follow> follows = followRepository.findByUserId(userId);
+        Pageable pageable = PaginationUtils.resolvePageable(page, size, offset, limit, resolveSort(order, "seller.nickname"));
+        Page<Follow> followsPage = followRepository.findByUserId(userId, pageable);
 
-        List<UserBasicDto> followed = follows.stream()
+        List<UserBasicDto> followed = followsPage.getContent().stream()
                 .map(follow -> UserBasicDto.builder()
                         .userId(follow.getSeller().getId())
                         .userName(follow.getSeller().getNickname())
                         .build())
-                .collect(Collectors.toList());
-
-        followed = applySorting(followed, order);
+                .toList();
 
         return FollowedListResponse.builder()
                 .userId(user.getId())
                 .userName(user.getNickname())
+                .total(followsPage.getTotalElements())
+                .page(followsPage.getNumber())
+                .size(followsPage.getSize())
                 .followed(followed)
                 .build();
     }
 
-    private List<UserBasicDto> applySorting(List<UserBasicDto> users, String order) {
-        if (order == null || order.isEmpty()) {
-            return users;
+    private Sort resolveSort(String order, String defaultProperty) {
+        if (order == null || order.isBlank()) {
+            return Sort.by(defaultProperty).ascending();
         }
 
         return switch (order.toLowerCase()) {
-            case "name_asc" -> users.stream()
-                    .sorted(Comparator.comparing(UserBasicDto::getUserName))
-                    .collect(Collectors.toList());
-            case "name_desc" -> users.stream()
-                    .sorted(Comparator.comparing(UserBasicDto::getUserName).reversed())
-                    .collect(Collectors.toList());
+            case "name_asc" -> Sort.by(defaultProperty).ascending();
+            case "name_desc" -> Sort.by(defaultProperty).descending();
             default -> throw new IllegalArgumentException("Invalid order parameter. Use 'name_asc' or 'name_desc'");
         };
     }
