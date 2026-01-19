@@ -1,0 +1,26 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: social_meli
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user123
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mongo:
+    image: mongo:8.2
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root123
+      MONGO_INITDB_DATABASE: socialmeli
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+volumes:
+  mysql_data:
+  mongo_data:

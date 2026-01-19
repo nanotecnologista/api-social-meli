@@ -1,0 +1,84 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "API Documentation",
+    "version" : "1.0"
+  },
+  "paths" : {
+    "/auth/register" : {
+      "post" : {
+        "summary" : "register",
+        "description" : "register",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "required" : [ "email", "name", "nickname", "password" ],
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string",
+                    "description" : ""
+                  },
+                  "nickname" : {
+                    "maxLength" : 30,
+                    "type" : "string",
+                    "description" : ""
+                  },
+                  "email" : {
+                    "maxLength" : 100,
+                    "type" : "string",
+                    "description" : "",
+                    "format" : "email"
+                  },
+                  "password" : {
+                    "maxLength" : 100,
+                    "minLength" : 6,
+                    "type" : "string",
+                    "description" : ""
+                  }
+                },
+                "description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "userId" : {
+                      "type" : "integer",
+                      "description" : "",
+                      "format" : "int64"
+                    },
+                    "nickname" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "email" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "roles" : {
+                      "type" : "array",
+                      "description" : "",
+                      "items" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : { }
+}
