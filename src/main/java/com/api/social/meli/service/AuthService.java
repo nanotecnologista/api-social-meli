@@ -61,9 +61,12 @@ public class AuthService {
 
         return RegisterResponse.builder()
                 .userId(user.getId())
+                .name(user.getName())
                 .nickname(user.getNickname())
                 .email(user.getEmail())
                 .roles(Set.of(RoleName.CUSTOMER.name()))
+                .followersCount(user.getFollowersCount())
+                .followingCount(user.getFollowingCount())
                 .build();
     }
 
@@ -78,8 +81,19 @@ public class AuthService {
             throw new IllegalArgumentException("invalid credentials");
         }
 
+        Set<String> roles = userRoleRepository.findRolesByUserId(user.getId())
+                .stream()
+                .map(Enum::name)
+                .collect(java.util.stream.Collectors.toSet());
+
         return LoginResponse.builder()
                 .userId(user.getId())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .roles(roles)
+                .followersCount(user.getFollowersCount())
+                .followingCount(user.getFollowingCount())
                 .build();
     }
     

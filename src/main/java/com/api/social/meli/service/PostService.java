@@ -53,6 +53,20 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public PostCountResponse getPostCount(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        long count = postRepository.countByUserId(userId);
+
+        return PostCountResponse.builder()
+                .userId(user.getId())
+                .userName(user.getNickname())
+                .postsCount(count)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
     public PromoCountResponse getPromoCount(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));

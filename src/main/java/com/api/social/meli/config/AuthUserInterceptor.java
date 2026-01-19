@@ -38,6 +38,12 @@ public class AuthUserInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (path != null && (path.startsWith("/v3/api-docs") || 
+                             path.startsWith("/swagger-ui") || 
+                             path.equals("/swagger-ui.html"))) {
+            return true;
+        }
+
         if (isPublicRoute(request.getMethod(), path)) {
             return true;
         }
@@ -94,6 +100,14 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         }
 
         if (path.equals("/categories") || path.startsWith("/categories/")) {
+            return true;
+        }
+
+        if (path.equals("/products/posts/count")) {
+            return true;
+        }
+
+        if (path.equals("/users/sellers") || path.matches("/users/sellers/\\d+")) {
             return true;
         }
 
