@@ -30,7 +30,7 @@
         <java.version>21</java.version>
         <lombok.version>1.18.38</lombok.version>
         <logback.version>1.5.12</logback.version>
-        <tomcat.version>10.1.35</tomcat.version>
+        <tomcat.version>10.1.49</tomcat.version>
         <commons-compress.version>1.27.1</commons-compress.version>
     </properties>
 
